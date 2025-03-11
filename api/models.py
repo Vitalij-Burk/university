@@ -1,9 +1,13 @@
 import re
 import uuid
-
 from typing import Optional
+
 from fastapi import HTTPException
-from pydantic import BaseModel, EmailStr, ConfigDict, constr, field_validator
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import constr
+from pydantic import EmailStr
+from pydantic import field_validator
 
 
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
@@ -26,7 +30,7 @@ class UserCreate(BaseModel):
     surname: constr(min_length=1)
     email: EmailStr
 
-    @field_validator('name')
+    @field_validator("name")
     def validate_name(cls, value):
         if not LETTER_MATCH_PATTERN.match(value):
             raise HTTPException(
@@ -34,7 +38,7 @@ class UserCreate(BaseModel):
             )
         return value
 
-    @field_validator('surname')
+    @field_validator("surname")
     def validate_surname(cls, value):
         if not LETTER_MATCH_PATTERN.match(value):
             raise HTTPException(
@@ -52,7 +56,7 @@ class UpdateUserRequest(BaseModel):
     surname: Optional[constr(min_length=1)] = None
     email: Optional[EmailStr] = None
 
-    @field_validator('name')
+    @field_validator("name")
     def validate_name(cls, value):
         if not LETTER_MATCH_PATTERN.match(value):
             raise HTTPException(
@@ -60,7 +64,7 @@ class UpdateUserRequest(BaseModel):
             )
         return value
 
-    @field_validator('surname')
+    @field_validator("surname")
     def validate_surname(cls, value):
         if not LETTER_MATCH_PATTERN.match(value):
             raise HTTPException(

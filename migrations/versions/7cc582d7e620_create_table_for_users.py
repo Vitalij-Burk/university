@@ -5,15 +5,13 @@ Revises: bca88f28ad08
 Create Date: 2025-03-07 18:15:19.870360
 
 """
-from typing import Sequence, Union
-
-from alembic import op
-import sqlalchemy as sa
+from typing import Sequence
+from typing import Union
 
 
 # revision identifiers, used by Alembic.
-revision: str = '7cc582d7e620'
-down_revision: Union[str, None] = 'bca88f28ad08'
+revision: str = "7cc582d7e620"
+down_revision: Union[str, None] = "bca88f28ad08"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
