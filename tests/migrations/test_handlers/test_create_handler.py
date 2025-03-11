@@ -4,11 +4,7 @@ import pytest
 
 
 async def test_create_user(client, get_user_from_database):
-    user_data = {
-        "name": "Mikhail",
-        "surname": "Eblan",
-        "email": "mikhail@eblan.com"
-    }
+    user_data = {"name": "Mikhail", "surname": "Eblan", "email": "mikhail@eblan.com"}
     resp = client.post("/user/", data=json.dumps(user_data))
     data_from_resp = resp.json()
     assert resp.status_code == 200
@@ -27,15 +23,11 @@ async def test_create_user(client, get_user_from_database):
 
 
 async def test_create_user_duplicate_email_error(client, get_user_from_database):
-    user_data = {
-        "name": "Mikhail",
-        "surname": "Eblan",
-        "email": "mikhail@eblan.com"
-    }
+    user_data = {"name": "Mikhail", "surname": "Eblan", "email": "mikhail@eblan.com"}
     user_data_same_email = {
         "name": "Petr",
         "surname": "Suka",
-        "email": "mikhail@eblan.com"
+        "email": "mikhail@eblan.com",
     }
     resp = client.post("/user/", data=json.dumps(user_data))
     data_from_resp = resp.json()
@@ -70,31 +62,22 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
                 "detail": [
                     {
                         "type": "missing",
-                        "loc": [
-                            "body",
-                            "name"
-                        ],
+                        "loc": ["body", "name"],
                         "msg": "Field required",
-                        "input": {}
+                        "input": {},
                     },
                     {
                         "type": "missing",
-                        "loc": [
-                            "body",
-                            "surname"
-                        ],
+                        "loc": ["body", "surname"],
                         "msg": "Field required",
-                        "input": {}
+                        "input": {},
                     },
                     {
                         "type": "missing",
-                        "loc": [
-                            "body",
-                            "email"
-                        ],
+                        "loc": ["body", "email"],
                         "msg": "Field required",
-                        "input": {}
-                    }
+                        "input": {},
+                    },
                 ]
             },
         ),
@@ -105,43 +88,30 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
                 "detail": [
                     {
                         "type": "string_type",
-                        "loc": [
-                            "body",
-                            "name"
-                        ],
+                        "loc": ["body", "name"],
                         "msg": "Input should be a valid string",
-                        "input": 123
+                        "input": 123,
                     },
                     {
                         "type": "string_type",
-                        "loc": [
-                            "body",
-                            "surname"
-                        ],
+                        "loc": ["body", "surname"],
                         "msg": "Input should be a valid string",
-                        "input": 456
+                        "input": 456,
                     },
                     {
                         "type": "value_error",
-                        "loc": [
-                            "body",
-                            "email"
-                        ],
+                        "loc": ["body", "email"],
                         "msg": "value is not a valid email address: An email address must have an @-sign.",
                         "input": "lol",
-                        "ctx": {
-                            "reason": "An email address must have an @-sign."
-                        }
-                    }
+                        "ctx": {"reason": "An email address must have an @-sign."},
+                    },
                 ]
             },
         ),
         (
             {"name": "123", "surname": "456", "email": "lol"},
             422,
-            {
-                "detail": "Name should contains only letters"
-            },
+            {"detail": "Name should contains only letters"},
         ),
         (
             {"name": "Nikolai", "surname": 456, "email": "lol"},
@@ -150,25 +120,17 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
                 "detail": [
                     {
                         "type": "string_type",
-                        "loc": [
-                            "body",
-                            "surname"
-                        ],
+                        "loc": ["body", "surname"],
                         "msg": "Input should be a valid string",
-                        "input": 456
+                        "input": 456,
                     },
                     {
                         "type": "value_error",
-                        "loc": [
-                            "body",
-                            "email"
-                        ],
+                        "loc": ["body", "email"],
                         "msg": "value is not a valid email address: An email address must have an @-sign.",
                         "input": "lol",
-                        "ctx": {
-                            "reason": "An email address must have an @-sign."
-                        }
-                    }
+                        "ctx": {"reason": "An email address must have an @-sign."},
+                    },
                 ]
             },
         ),
@@ -184,15 +146,10 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
                 "detail": [
                     {
                         "type": "value_error",
-                        "loc": [
-                            "body",
-                            "email"
-                        ],
+                        "loc": ["body", "email"],
                         "msg": "value is not a valid email address: An email address must have an @-sign.",
                         "input": "lol",
-                        "ctx": {
-                            "reason": "An email address must have an @-sign."
-                        }
+                        "ctx": {"reason": "An email address must have an @-sign."},
                     }
                 ]
             },
@@ -204,15 +161,10 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
                 "detail": [
                     {
                         "type": "string_too_short",
-                        "loc": [
-                            "body",
-                            "surname"
-                        ],
+                        "loc": ["body", "surname"],
                         "msg": "String should have at least 1 character",
                         "input": "",
-                        "ctx": {
-                            "min_length": 1
-                        }
+                        "ctx": {"min_length": 1},
                     }
                 ]
             },
@@ -224,15 +176,10 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
                 "detail": [
                     {
                         "type": "string_too_short",
-                        "loc": [
-                            "body",
-                            "name"
-                        ],
+                        "loc": ["body", "name"],
                         "msg": "String should have at least 1 character",
                         "input": "",
-                        "ctx": {
-                            "min_length": 1
-                        }
+                        "ctx": {"min_length": 1},
                     }
                 ]
             },
