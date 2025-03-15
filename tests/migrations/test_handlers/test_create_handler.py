@@ -4,7 +4,12 @@ import pytest
 
 
 async def test_create_user(client, get_user_from_database):
-    user_data = {"name": "Mikhail", "surname": "Eblan", "email": "mikhail@eblan.com"}
+    user_data = {
+        "name": "Mikhail",
+        "surname": "Eblan",
+        "email": "mikhail@eblan.com",
+        "password": "string",
+    }
     resp = client.post("/user/", data=json.dumps(user_data))
     data_from_resp = resp.json()
     assert resp.status_code == 200
@@ -23,11 +28,17 @@ async def test_create_user(client, get_user_from_database):
 
 
 async def test_create_user_duplicate_email_error(client, get_user_from_database):
-    user_data = {"name": "Mikhail", "surname": "Eblan", "email": "mikhail@eblan.com"}
+    user_data = {
+        "name": "Mikhail",
+        "surname": "Eblan",
+        "email": "mikhail@eblan.com",
+        "password": "string",
+    }
     user_data_same_email = {
         "name": "Petr",
         "surname": "Suka",
         "email": "mikhail@eblan.com",
+        "password": "string",
     }
     resp = client.post("/user/", data=json.dumps(user_data))
     data_from_resp = resp.json()
@@ -78,11 +89,17 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
                         "msg": "Field required",
                         "input": {},
                     },
+                    {
+                        "type": "missing",
+                        "loc": ["body", "password"],
+                        "msg": "Field required",
+                        "input": {},
+                    },
                 ]
             },
         ),
         (
-            {"name": 123, "surname": 456, "email": "lol"},
+            {"name": 123, "surname": 456, "email": "lol", "password": "string"},
             422,
             {
                 "detail": [
@@ -109,12 +126,12 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
             },
         ),
         (
-            {"name": "123", "surname": "456", "email": "lol"},
+            {"name": "123", "surname": "456", "email": "lol", "password": "string"},
             422,
             {"detail": "Name should contains only letters"},
         ),
         (
-            {"name": "Nikolai", "surname": 456, "email": "lol"},
+            {"name": "Nikolai", "surname": 456, "email": "lol", "password": "string"},
             422,
             {
                 "detail": [
@@ -135,12 +152,17 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
             },
         ),
         (
-            {"name": "Nikolai", "surname": "456", "email": "lol"},
+            {"name": "Nikolai", "surname": "456", "email": "lol", "password": "string"},
             422,
             {"detail": "Surname should contains only letters"},
         ),
         (
-            {"name": "Nikolai", "surname": "Sviridov", "email": "lol"},
+            {
+                "name": "Nikolai",
+                "surname": "Sviridov",
+                "email": "lol",
+                "password": "string",
+            },
             422,
             {
                 "detail": [
@@ -155,7 +177,12 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
             },
         ),
         (
-            {"name": "Nikolai", "surname": "", "email": "lol@kek.com"},
+            {
+                "name": "Nikolai",
+                "surname": "",
+                "email": "lol@kek.com",
+                "password": "string",
+            },
             422,
             {
                 "detail": [
@@ -170,13 +197,38 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
             },
         ),
         (
-            {"name": "", "surname": "Sviridov", "email": "lol@kek.com"},
+            {
+                "name": "",
+                "surname": "Sviridov",
+                "email": "lol@kek.com",
+                "password": "string",
+            },
             422,
             {
                 "detail": [
                     {
                         "type": "string_too_short",
                         "loc": ["body", "name"],
+                        "msg": "String should have at least 1 character",
+                        "input": "",
+                        "ctx": {"min_length": 1},
+                    }
+                ]
+            },
+        ),
+        (
+            {
+                "name": "name",
+                "surname": "Sviridov",
+                "email": "lol@kek.com",
+                "password": "",
+            },
+            422,
+            {
+                "detail": [
+                    {
+                        "type": "string_too_short",
+                        "loc": ["body", "password"],
                         "msg": "String should have at least 1 character",
                         "input": "",
                         "ctx": {"min_length": 1},
