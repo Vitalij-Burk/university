@@ -29,6 +29,7 @@ class UserCreate(BaseModel):
     name: constr(min_length=1)
     surname: constr(min_length=1)
     email: EmailStr
+    password: constr(min_length=1)
 
     @field_validator("name")
     def validate_name(cls, value):
@@ -75,3 +76,8 @@ class UpdateUserRequest(BaseModel):
 
 class UpdatedUserResponse(BaseModel):
     updated_user_id: uuid.UUID
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
