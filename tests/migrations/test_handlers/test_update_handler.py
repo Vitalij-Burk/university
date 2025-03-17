@@ -3,6 +3,7 @@ from uuid import uuid4
 
 import pytest
 
+from db.models import PortalRole
 from tests.conftest import create_test_auth_headers_for_user
 from tests.conftest import create_user_in_database
 
@@ -15,6 +16,7 @@ async def test_update_user(client, create_user_in_database, get_user_from_databa
         "email": "mikhail@eblan.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     user_data_updated = {
         "name": "Misha",
@@ -49,6 +51,7 @@ async def test_update_user_check_one_is_updated(
         "email": "mikhail@eblan.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     user_data2 = {
         "user_id": uuid4(),
@@ -57,11 +60,13 @@ async def test_update_user_check_one_is_updated(
         "email": "petr@suka.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     user_data_updated = {
         "name": "Misha",
         "surname": "Debil",
         "email": "misha@debil.com",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     for user_data in [user_data1, user_data2]:
         await create_user_in_database(**user_data)
@@ -178,6 +183,7 @@ async def test_update_user_validation_error(
         "email": "mikhail@eblan.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     resp = client.patch(
@@ -198,6 +204,7 @@ async def test_update_user_id_validation_error(client, create_user_in_database):
         "email": "lol@kek.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     user_data_updated = {
@@ -235,6 +242,7 @@ async def test_update_user_not_found_error(client, create_user_in_database):
         "email": "lol@kek.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     user_data_updated = {
@@ -261,6 +269,7 @@ async def test_update_user_duplicate_email_error(client, create_user_in_database
         "email": "mikhail@eblan.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     user_data2 = {
         "user_id": uuid4(),
@@ -269,6 +278,7 @@ async def test_update_user_duplicate_email_error(client, create_user_in_database
         "email": "petr@suka.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     user_data_updated = {"email": user_data2["email"]}
     for user_data in [user_data1, user_data2]:
@@ -294,6 +304,7 @@ async def test_update_user_bad_creds(client, create_user_in_database):
         "email": "admin@kek.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     user_id = uuid4()
@@ -314,6 +325,7 @@ async def test_update_user_unauth(client, create_user_in_database):
         "email": "admin@kek.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     user_id = uuid4()
@@ -336,6 +348,7 @@ async def test_update_user_no_token(client, create_user_in_database):
         "email": "admin@kek.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     user_id = uuid4()

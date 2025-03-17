@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+from db.models import PortalRole
 from tests.conftest import create_test_auth_headers_for_user
 
 
@@ -11,6 +12,7 @@ async def test_get_user(client, create_user_in_database):
         "email": "mikhail@eblan.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     resp = client.get(
@@ -34,6 +36,7 @@ async def test_get_user_id_validation_error(client, create_user_in_database):
         "email": "mikhail@eblan.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     resp = client.get(
@@ -65,6 +68,7 @@ async def test_get_user_not_found(client, create_user_in_database):
         "email": "mikhail@eblan.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     user_id_for_finding = uuid4()
@@ -85,6 +89,7 @@ async def test_get_user_bad_creds(client, create_user_in_database):
         "email": "admin@kek.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     user_id = uuid4()
@@ -105,6 +110,7 @@ async def test_get_user_unauth(client, create_user_in_database):
         "email": "admin@kek.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     user_id = uuid4()
@@ -127,6 +133,7 @@ async def test_get_user_no_token(client, create_user_in_database):
         "email": "admin@kek.com",
         "is_active": True,
         "hashed_password": "string",
+        "roles": [PortalRole.ROLE_PORTAL_USER],
     }
     await create_user_in_database(**user_data)
     user_id = uuid4()
