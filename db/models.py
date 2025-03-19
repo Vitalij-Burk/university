@@ -23,6 +23,22 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     roles = Column(ARRAY(String), nullable=False)
 
+    @property
+    def is_superadmin(self) -> bool:
+        return PortalRole.ROLE_PORTAL_SUPERADMIN in self.roles
+
+    @property
+    def is_admin(self) -> bool:
+        return PortalRole.ROLE_PORTAL_ADMIN in self.roles
+
+    def enrich_roles_by_admin_role(self) -> list:
+        if not self.is_admin:
+            return {*self.roles, PortalRole.ROLE_PORTAL_ADMIN}
+
+    def remove_admin_privilege_from_model(self) -> list:
+        if self.is_admin:
+            return {role for role in self.roles if role != PortalRole.ROLE_PORTAL_ADMIN}
+
 
 class PortalRole(str, Enum):
     ROLE_PORTAL_USER = "ROLE_PORTAL_USER"
