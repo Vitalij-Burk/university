@@ -12,3 +12,4 @@ up_ci_rebuild:
 
 down_ci:
 	docker compose -f docker-compose-ci.yaml down --remove-orphans
+
