@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=python:3.13-slim-buster
+ARG BASE_IMAGE=python:3.13
 FROM $BASE_IMAGE
 
 # system update & package install
@@ -15,6 +15,7 @@ COPY . .
 WORKDIR .
 
 # pip & requirements
+RUN pip install prometheus-client starlette-prometheus
 RUN python3 -m pip install --user --upgrade pip && \
     python3 -m pip install -r requirements.txt
 
