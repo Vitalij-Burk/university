@@ -1,7 +1,6 @@
-version: "3.0"
 services:
-  db:
-    container_name: "db"
+  real_db:
+    container_name: "real_db"
     image: postgres:latest
     restart: always
     environment:
@@ -9,19 +8,19 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
     ports:
-      - "5436:5432"
+      - "5438:5432"
     networks:
       - custom
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - real_db-data:/var/lib/postgresql/data
   luchanos_oxford_university_app:
-    container_name: university
-    image: university # Specify the name of the Docker image to be built
+    container_name: luchanos_oxford_university_app
+    image: luchanos_oxford_university_app # Specify the name of the Docker image to be built
     depends_on:
-      - db
+      - real_db
       - alembic_migrations
     environment:
-      REAL_DATABASE_URL: "postgresql+asyncpg://postgres:postgres@db:5436/postgres"
+      REAL_DATABASE_URL: "postgresql+asyncpg://postgres:postgres@real_db:5432/postgres"
       SENTRY_URL: "https://2d340f23a0454ea0a23a0d2d6fbe2e1f@o4504938483875840.ingest.sentry.io/4504939751538688"
       APP_PORT: "8000"
     build:
@@ -33,13 +32,13 @@ services:
       - custom
   alembic_migrations:
     container_name: alembic_migrations
-    image: alembic_migrations # Specify the name of the Docker image to be built
+    image: alembic_migrations
     command: ./run.sh
     depends_on:
-      - db
+      - real_db
     environment:
-      ALEMBIC_DATABASE_URL: "postgresql://postgres:postgres@db/postgres"
-      REAL_DATABASE_URL: "postgresql+asyncpg://postgres:postgres@db:5436/postgres"
+      ALEMBIC_DATABASE_URL: "postgresql://postgres:postgres@real_db/postgres"
+      REAL_DATABASE_URL: "postgresql+asyncpg://postgres:postgres@real_db:5432/postgres"
       SENTRY_URL: "https://2d340f23a0454ea0a23a0d2d6fbe2e1f@o4504938483875840.ingest.sentry.io/4504939751538688"
       APP_PORT: "8001"
     build:
@@ -51,8 +50,8 @@ services:
       - custom
   prometheus:
     depends_on:
-      - university
-    image: prom/prometheus:v3.0.0
+      - luchanos_oxford_university_app
+    image: prom/prometheus:v2.43.0
     container_name: prometheus
     restart: unless-stopped
     volumes:
@@ -82,7 +81,7 @@ networks:
   custom:
     driver: bridge
 volumes:
-  db-data:
+  real_db-data:
   grafana-data:
   grafana-config:
   prometheus-data:
